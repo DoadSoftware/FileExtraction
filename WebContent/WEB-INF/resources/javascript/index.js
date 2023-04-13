@@ -50,10 +50,12 @@ function processUserSelection(whichInput)
       	document.initialise_form.submit();
 		break;
 	case 'start_btn':
+		document.getElementById('download_lbl').innerHTML = 'Data Download START';
 		processFileExtractionProcedures('START_FILE_EXTRACTION');
-		display = setInterval(processMatchTime, 60000);
+		display = setInterval(processMatchTime, ($('#updateDuration').val()*1000));
 		break;
 	case 'stop_btn':
+		document.getElementById('download_lbl').innerHTML = 'Data Download STOP';
 		clearInterval(display); 
 		break;
 	}

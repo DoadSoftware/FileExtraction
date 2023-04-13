@@ -40,6 +40,7 @@
            		<label class="col-sm-4 col-form-label text-left">USERNAME: ${username} </label>
            		<label class="col-sm-4 col-form-label text-left">PASSWORD: ${password} </label>
            		<label class="col-sm-4 col-form-label text-left">MATCH ${match_number} </label>
+           		<label id="download_lbl" class="col-sm-4 col-form-label text-left">Data Download STOP</label>
            		<div align="center">
 	  				 <button style="background-color:#f44336;color:#FEFEFE;" class="btn btn-sm" type="button" 
 	           			name="start_btn" id="start_btn" onclick="processUserSelection(this)"> Start </button>
