@@ -1,16 +1,18 @@
 package com.fileextraction.util;
 
-import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
+import java.io.PrintWriter;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipInputStream;
 
-import org.apache.commons.net.ftp.FTP;
+import org.apache.commons.compress.archivers.ArchiveEntry;
+import org.apache.commons.compress.archivers.zip.ZipArchiveInputStream;
+import org.apache.commons.net.PrintCommandListener;
 import org.apache.commons.net.ftp.FTPClient;
+import org.apache.commons.net.ftp.FTPReply;
 
 public class FileExtractionFunctions 
 {
@@ -18,23 +20,27 @@ public class FileExtractionFunctions
 	public static void FTPDownload(int port,int match_number,String user,String pass) {
 		
 		FTPClient ftpClient = new FTPClient();
+		ftpClient.addProtocolCommandListener(new PrintCommandListener(new PrintWriter(System.out)));
 		try {
 			 
             ftpClient.connect(FileExtractionUtil.FTP_SERVER_LINK, port);
+            
+            int reply = ftpClient.getReplyCode();
+            if (!FTPReply.isPositiveCompletion(reply)) {
+            	ftpClient.disconnect();
+                throw new IOException("Exception in connecting to FTP Server");
+            }
+            
             ftpClient.login(user, pass);
-            ftpClient.enterLocalPassiveMode();
-            ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
+            //ftpClient.enterLocalPassiveMode();
+            //ftpClient.setFileType(FTP.BINARY_FILE_TYPE);
  
-            // APPROACH #1: using retrieveFile(String, OutputStream)
-            //String remoteFile1 = FileExtractionUtil.SPORTVUSTATISTIC + FileExtractionUtil.ZIP;
-            //File downloadFile1 = new File(FileExtractionUtil.FOOTBALL_SPORTS_DIRECTORY + FileExtractionUtil.STATISTIC_DIRECTORY + remoteFile1);
-            String remoteFile1 = FileExtractionUtil.SPORTVUSTATISTIC + FileExtractionUtil.XML;
-            File downloadFile1 = new File(FileExtractionUtil.FOOTBALL_SPORTS_DIRECTORY + FileExtractionUtil.STATISTIC_DIRECTORY + 
-            		FileExtractionUtil.MATCH_DATA_DIRECTORY + remoteFile1);
-            OutputStream outputStream1 = new BufferedOutputStream(new FileOutputStream(downloadFile1));
-            boolean success = ftpClient.retrieveFile(remoteFile1, outputStream1);
-            outputStream1.close();
- 
+            String remoteFile1 = FileExtractionUtil.SPORTVUSTATISTIC + FileExtractionUtil.ZIP;
+            File downloadFile1 = new File(FileExtractionUtil.FOOTBALL_SPORTS_DIRECTORY + FileExtractionUtil.STATISTIC_DIRECTORY + remoteFile1);
+           
+            FileOutputStream out = new FileOutputStream(downloadFile1);
+            boolean success = ftpClient.retrieveFile(remoteFile1, out);
+            
             if (success) {
                 System.out.println("File has been downloaded successfully.");
             }
@@ -54,44 +60,80 @@ public class FileExtractionFunctions
         }
 	}
 	
+//	public static void UnzipDownloadFile(int match_number) throws IOException {
+//		String fileZip = FileExtractionUtil.FOOTBALL_SPORTS_DIRECTORY + FileExtractionUtil.STATISTIC_DIRECTORY + FileExtractionUtil.SPORTVUSTATISTIC + FileExtractionUtil.ZIP;
+//			System.out.println("PATH : " + fileZip);
+//        File destDir = new File(FileExtractionUtil.FOOTBALL_SPORTS_DIRECTORY + FileExtractionUtil.STATISTIC_DIRECTORY + FileExtractionUtil.MATCH_DATA_DIRECTORY);
+//        
+//        byte[] buffer = new byte[1024];
+//        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip))) {
+//			ZipEntry zipEntry = zis.getNextEntry();
+//			while (zipEntry != null) {
+//				File newFile = newFile(destDir, zipEntry);
+//			    if (zipEntry.isDirectory()) {
+//			        if (!newFile.isDirectory() && !newFile.mkdirs()) {
+//			            throw new IOException("Failed to create directory " + newFile);
+//			        }
+//			    } else {
+//			        // fix for Windows-created archives
+//			        File parent = newFile.getParentFile();
+//			        if (!parent.isDirectory() && !parent.mkdirs()) {
+//			            throw new IOException("Failed to create directory " + parent);
+//			        }
+//
+//			        // write file content
+//			        FileOutputStream fos = new FileOutputStream(newFile);
+//			        int len;
+//			        System.out.println("LEN : " + zis.read(buffer));
+//			        while ((len = zis.read(buffer)) > 0) {
+//			            fos.write(buffer, 0, len);
+//			        }
+//			        fos.close();
+//			    }
+//			   zipEntry = zis.getNextEntry();
+//			}
+//
+//			zis.closeEntry();
+//			zis.close();
+//		}
+//	}
 	public static void UnzipDownloadFile(int match_number) throws IOException {
-		String fileZip = FileExtractionUtil.FOOTBALL_SPORTS_DIRECTORY + FileExtractionUtil.STATISTIC_DIRECTORY + 
-				FileExtractionUtil.SPORTVUSTATISTIC + FileExtractionUtil.ZIP;
+		
+		String fileZip = FileExtractionUtil.FOOTBALL_SPORTS_DIRECTORY + FileExtractionUtil.STATISTIC_DIRECTORY + FileExtractionUtil.SPORTVUSTATISTIC + FileExtractionUtil.ZIP;
         File destDir = new File(FileExtractionUtil.FOOTBALL_SPORTS_DIRECTORY + FileExtractionUtil.STATISTIC_DIRECTORY + FileExtractionUtil.MATCH_DATA_DIRECTORY);
         
         byte[] buffer = new byte[1024];
-        try (ZipInputStream zis = new ZipInputStream(new FileInputStream(fileZip))) {
-			ZipEntry zipEntry = zis.getNextEntry();
+        try (ZipArchiveInputStream zis = new ZipArchiveInputStream(new FileInputStream(fileZip))) {
+        	ArchiveEntry zipEntry = zis.getNextEntry();
 			while (zipEntry != null) {
 				File newFile = newFile(destDir, zipEntry);
-			    if (zipEntry.isDirectory()) {
-			        if (!newFile.isDirectory() && !newFile.mkdirs()) {
-			            throw new IOException("Failed to create directory " + newFile);
-			        }
-			    } else {
-			        // fix for Windows-created archives
-			        File parent = newFile.getParentFile();
-			        if (!parent.isDirectory() && !parent.mkdirs()) {
-			            throw new IOException("Failed to create directory " + parent);
-			        }
+				if (zipEntry.isDirectory()) {
+                    if (!newFile.isDirectory() && !newFile.mkdirs()) {
+                        throw new IOException("Failed to create directory " + newFile);
+                    }
+                } else {
+                    // fix for Windows-created archives
+                    File parent = newFile.getParentFile();
+                    if (!parent.isDirectory() && !parent.mkdirs()) {
+                        throw new IOException("Failed to create directory " + parent);
+                    }
 
-			        // write file content
-			        FileOutputStream fos = new FileOutputStream(newFile);
-			        int len;
-			        while ((len = zis.read(buffer)) > 0) {
-			            fos.write(buffer, 0, len);
-			        }
-			        fos.close();
-			    }
-			   zipEntry = zis.getNextEntry();
+                    // write file content
+                    try (FileOutputStream fos = new FileOutputStream(newFile)) {
+                        int len;
+                        while ((len = zis.read(buffer)) > 0) {
+                            fos.write(buffer, 0, len);
+                        }
+                    }
+                }
+                zipEntry = zis.getNextEntry();
 			}
-
-			zis.closeEntry();
-			zis.close();
+			//zis.closeEntry();
+			//zis.close();
 		}
 	}
 	
-	public static File newFile(File destinationDir, ZipEntry zipEntry) throws IOException {
+	public static File newFile(File destinationDir, ArchiveEntry zipEntry) throws IOException {
 	    File destFile = new File(destinationDir, zipEntry.getName());
 
 	    String destDirPath = destinationDir.getCanonicalPath();

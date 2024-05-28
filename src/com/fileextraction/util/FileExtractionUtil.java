@@ -16,7 +16,7 @@ public class FileExtractionUtil {
 	public final static String FTP_SERVER_LINK = "soccer-ftp.stats.com";
 	
 	//public final static String SPORTVUSTATISTIC = "SportVUStatistic_";
-	public final static String SPORTVUSTATISTIC = "SportVUStatistic";
+	public final static String SPORTVUSTATISTIC = "SportVUStatistic_2654198";
 	
 	public final static String LOAD_MATCH = "LOAD_MATCH";
 	public final static String TEAM = "TEAM";

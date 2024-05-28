@@ -96,8 +96,8 @@ public class IndexController
 	{	
 		switch (whatToProcess.toUpperCase()) {
 		case "START_FILE_EXTRACTION":
-			FileExtractionFunctions.FTPDownload(port_number,match_number, username, password);
-			//FileExtractionFunctions.UnzipDownloadFile(match_number);
+			FileExtractionFunctions.FTPDownload(port_number, match_number, username, password);
+			FileExtractionFunctions.UnzipDownloadFile(match_number);
 			return JSONObject.fromObject(null).toString();
 		
 		default:

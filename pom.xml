@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>File_Extraction</groupId>
   <artifactId>File_Extraction</artifactId>
-  <version>1.03</version>
+  <version>1.04</version>
   <packaging>war</packaging>
   <name>FileExtraction</name>
   <properties>
@@ -18,11 +18,22 @@
     <artifactId>commons-net</artifactId>
     <version>3.9.0</version>
 </dependency>
-
+<dependency> 
+    <groupId>org.mockftpserver</groupId> 
+    <artifactId>MockFtpServer</artifactId> 
+    <version>2.7.1</version> 
+    <scope>test</scope> 
+</dependency>
 <dependency>
 	<groupId>org.webjars</groupId>
 	<artifactId>select2</artifactId>
 	<version>4.0.13</version>
+</dependency>
+<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-compress -->
+<dependency>
+    <groupId>org.apache.commons</groupId>
+    <artifactId>commons-compress</artifactId>
+    <version>1.26.2</version>
 </dependency>
 <!-- https://mvnrepository.com/artifact/javax.annotation/javax.annotation-api -->
 <dependency>
