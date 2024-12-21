@@ -3,7 +3,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>File_Extraction</groupId>
   <artifactId>File_Extraction</artifactId>
-  <version>1.04</version>
+  <version>1.08</version>
   <packaging>war</packaging>
   <name>FileExtraction</name>
   <properties>

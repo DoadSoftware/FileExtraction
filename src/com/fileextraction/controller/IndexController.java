@@ -95,9 +95,13 @@ public class IndexController
 					throws IOException, IllegalAccessException, InvocationTargetException, JAXBException, InterruptedException
 	{	
 		switch (whatToProcess.toUpperCase()) {
-		case "START_FILE_EXTRACTION":
-			FileExtractionFunctions.FTPDownload(port_number, match_number, username, password);
-			FileExtractionFunctions.UnzipDownloadFile(match_number);
+		case FileExtractionUtil.START_FILE_EXTRACTION:
+			if(session_broadcaster.equalsIgnoreCase(FileExtractionUtil.ISL)) {
+				FileExtractionFunctions.FTPDownloadXMLFile(port_number, match_number, username, password);
+			}else {
+				FileExtractionFunctions.FTPDownload(port_number, match_number, username, password);
+				FileExtractionFunctions.UnzipDownloadFile(match_number);
+			}
 			return JSONObject.fromObject(null).toString();
 		
 		default:

@@ -33,6 +33,7 @@
 			   <div class="col-sm-6 col-md-6">
 			 <select id="selectedBroadcaster" name="selectedBroadcaster" class="browser-default custom-select custom-select-sm" 
 			      		onchange="processUserSelection(this)">
+			      		<option value="ISL">ISL</option>
 			      		<option value="SUPER_CUP">SUPER CUP</option>
 			      	  <option value="VIZ_TRI_NATION">TRI NATION</option>
 			      </select>

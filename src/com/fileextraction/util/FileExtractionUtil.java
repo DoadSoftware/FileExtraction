@@ -13,10 +13,18 @@ public class FileExtractionUtil {
 	public final static String XML = ".xml";
 	public final static String ZIP = ".zip";
 	public final static String CONTAINER_FILE = "container.txt";
-	public final static String FTP_SERVER_LINK = "soccer-ftp.stats.com";
+	
+	public final static String START_FILE_EXTRACTION = "START_FILE_EXTRACTION";
+	
+	//public final static String FTP_SERVER_LINK = "soccer-ftp.stats.com";
+	public final static String FTP_SERVER_LINK = "media-ingest-ftp.statsperform.com";
 	
 	//public final static String SPORTVUSTATISTIC = "SportVUStatistic_";
-	public final static String SPORTVUSTATISTIC = "SportVUStatistic_2654198";
+	public final static String SPORTVUSTATISTIC = "SportVUStatistic";
+	
+	public final static String ISL = "ISL";
+	public final static String SUPER_CUP = "SUPER_CUP";
+	public final static String VIZ_TRI_NATION = "VIZ_TRI_NATION";
 	
 	public final static String LOAD_MATCH = "LOAD_MATCH";
 	public final static String TEAM = "TEAM";
